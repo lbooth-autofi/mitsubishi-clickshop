@@ -15,7 +15,13 @@ import java.util.ArrayList;
 
 public class ClickShopTest extends BaseTest {
 
-    private SearchResultsPage navToSrp(WebDriver driver, SoftAssert softAssert, CSVToDealerZipList.DealerZip expectedDealer) {
+    String csvFilePath = "/Users/lbooth/Desktop/DealershipsAndZIPCodes-20240425.csv";
+
+    // if test run fails before checking all dealers, reset index to last failed dealer and restart test
+    int dealerIndex = 0;
+    int expectedDistanceFromZipCode = 1;
+
+    private SearchResultsPage navToSearchResultsPage(WebDriver driver, SoftAssert softAssert, CSVToDealerZipList.DealerZip expectedDealer) {
         String urlVDPByZipCode = ClickShopUrl.getClickShopUatUrl(expectedDealer.getZipCode());
 
         SearchResultsPage searchResultsPage = new SearchResultsPage(driver, urlVDPByZipCode);
@@ -68,29 +74,25 @@ public class ClickShopTest extends BaseTest {
         );
     }
 
+    // test seems to fail if you haven't navigated to the UAT site in your regular web browser first
+    // test failed at index 128; should you close browser and restart test after a certain number of dealers?
     @Test
-    public void testClickShopDealers() {
+    public void testClickShopDealers(String csvFilePath, int dealerIndex, int expectedDistanceFromZipCode) {
         WebDriver driver = setupTestDriver(TestBrowser.CHROME);
         driver.manage().window().maximize();
         SoftAssert softAssert = new SoftAssert();
 
-        int expectedDistance = 1;
-
         ArrayList<CSVToDealerZipList.DealerZip> dealerZipList = new ArrayList<>();
 
         try {
-            dealerZipList = CSVToDealerZipList.convertCSV("/Users/lbooth/Desktop/DealershipsAndZIPCodes-20240425.csv", "," , false);
+            dealerZipList = CSVToDealerZipList.convertCSV(csvFilePath, "," , false);
         } catch (IOException e) {
-            Assert.fail("Unable to convert CSV to DealerZipList");
+            Assert.fail("Unable to convert CSV to list of DealerZip objects.");
         }
 
-        // test seems to fail if you haven't navigated to the UAT site in your regular web browser first
-        // test failed at index 128; need to close, reopen browser after a certain number of dealers?
-
-        //for (CSVToDealerZipList.DealerZip dealerZip : dealerZipList) {
-        for (int index = 0; index < dealerZipList.size(); index++) {
-            SearchResultsPage srp = navToSrp(driver, softAssert, dealerZipList.get(index));
-            assertDealerNameAndDistance(srp, softAssert, index, 1, dealerZipList.get(index), expectedDistance);
+        for (int index = dealerIndex; index < dealerZipList.size(); index++) {
+            SearchResultsPage srp = navToSearchResultsPage(driver, softAssert, dealerZipList.get(index));
+            assertDealerNameAndDistance(srp, softAssert, index, 1, dealerZipList.get(index), expectedDistanceFromZipCode);
         }
 
         softAssert.assertAll();
