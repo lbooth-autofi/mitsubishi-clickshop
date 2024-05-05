@@ -34,7 +34,7 @@ public class EmailUtils {
 
   @Test
   public void testGenerateEmail() {
-    String emailAddress = "leoboothtx@gmail.com";
+    String emailAddress = "lbooth@autofi.io";
     String testEmail = generateEmail(emailAddress);
     System.out.println("test email: " + testEmail);
   }
