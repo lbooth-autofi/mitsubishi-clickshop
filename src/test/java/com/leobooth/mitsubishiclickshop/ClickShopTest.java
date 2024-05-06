@@ -71,8 +71,10 @@ public class ClickShopTest extends BaseTest {
         );
     }
 
-    // test seems to fail if you haven't navigated to the UAT site in your regular web browser first
-    // test failed at index 128; should you close browser and restart test after a certain number of dealers?
+    /**
+        <h3>testClickShopDealers()</h3>
+        This test compares a list of Mitsubishi ClickShop dealer names and ZIP codes to see if the expected dealer appears for each ZIP code.
+     */
     @Test
     public void testClickShopDealers() {
         String csvFilePath = "/Users/lbooth/Automation/mitsubishi-clickshop/" +
