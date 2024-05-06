@@ -15,12 +15,7 @@ import java.util.ArrayList;
 
 public class ClickShopTest extends BaseTest {
 
-    String csvFilePath = "/Users/lbooth/Desktop/DealershipsAndZIPCodes-20240425.csv";
-
-    // if test run fails before checking all dealers, reset index to last failed dealer and restart test
-    int dealerIndex = 0;
-    int expectedDistanceFromZipCode = 1;
-
+    // TODO: create allow test to choose between navigating to UAT or Prod environments
     private SearchResultsPage navToSearchResultsPage(WebDriver driver, SoftAssert softAssert, CSVToDealerZipList.DealerZip expectedDealer) {
         String urlVDPByZipCode = ClickShopUrl.getClickShopUatUrl(expectedDealer.getZipCode());
 
@@ -36,15 +31,16 @@ public class ClickShopTest extends BaseTest {
         return searchResultsPage;
     }
 
-    private void assertDealerNameAndDistance(SearchResultsPage srp, SoftAssert softAssert, int index, int tileNumber, CSVToDealerZipList.DealerZip expectedDealer, int expectedDistance) {
+    // tileIndex expects a zero-based index (the first vehicle tile on the SRP should have index = 0)
+    private void assertDealerNameAndDistance(SearchResultsPage srp, SoftAssert softAssert, int index, int tileIndex, CSVToDealerZipList.DealerZip expectedDealer, int expectedDistance) {
         String actualDealerName = "";
         String actualDistanceAsString = "";
         int actualDistance = -1;
 
         try {
             srp.waitUntilDealerNameVisible(15);
-            actualDealerName = srp.getSRPTileDealerName(tileNumber);
-            actualDistanceAsString = srp.getSRPTileDistance(tileNumber);
+            actualDealerName = srp.getSRPTileDealerName(tileIndex);
+            actualDistanceAsString = srp.getSRPTileDistance(tileIndex);
             actualDistance = Integer.parseInt(
                     actualDistanceAsString.substring(0, actualDistanceAsString.indexOf("mi")).trim()
             );
@@ -61,7 +57,8 @@ public class ClickShopTest extends BaseTest {
             }
         }
 
-        System.out.println("index: " + index + ", expected dealer: " + expectedDealer.getDealership() + ", actual dealer: " + actualDealerName);
+        System.out.println("index: " + index + ", ZIP Code: " + expectedDealer.getZipCode() +
+                ", expected dealer: " + expectedDealer.getDealership() + ", actual dealer: " + actualDealerName);
 
         softAssert.assertEquals(
                 actualDealerName.toUpperCase(), expectedDealer.getDealership().toUpperCase(),
@@ -77,7 +74,15 @@ public class ClickShopTest extends BaseTest {
     // test seems to fail if you haven't navigated to the UAT site in your regular web browser first
     // test failed at index 128; should you close browser and restart test after a certain number of dealers?
     @Test
-    public void testClickShopDealers(String csvFilePath, int dealerIndex, int expectedDistanceFromZipCode) {
+    public void testClickShopDealers() {
+        String csvFilePath = "/Users/lbooth/Automation/mitsubishi-clickshop/" +
+                "src/main/java/com/leobooth/mitsubishiclickshop/" +
+                "testdata/DealershipsAndZIPCodes-20240425.csv";
+
+        // if test run fails before checking all dealers, reset index to last failed dealer and restart test
+        int dealerIndex = 0;
+        int expectedDistanceFromZipCode = 1;
+
         WebDriver driver = setupTestDriver(TestBrowser.CHROME);
         driver.manage().window().maximize();
         SoftAssert softAssert = new SoftAssert();
@@ -92,7 +97,7 @@ public class ClickShopTest extends BaseTest {
 
         for (int index = dealerIndex; index < dealerZipList.size(); index++) {
             SearchResultsPage srp = navToSearchResultsPage(driver, softAssert, dealerZipList.get(index));
-            assertDealerNameAndDistance(srp, softAssert, index, 1, dealerZipList.get(index), expectedDistanceFromZipCode);
+            assertDealerNameAndDistance(srp, softAssert, index, 0, dealerZipList.get(index), expectedDistanceFromZipCode);
         }
 
         softAssert.assertAll();

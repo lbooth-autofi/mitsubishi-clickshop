@@ -83,21 +83,29 @@ public class SearchResultsPage extends BasePage {
         }
     }
 
-    public String getSRPTileDealerName(int tileNumber) {
+    public String getSRPTileDealerName(int tileIndex) {
         ArrayList<WebElement> dealerNames = new ArrayList<>(getDriver().findElements(srpTileDealerNameSelector));
 
+        if(tileIndex >= dealerNames.size()) {
+            return "requested tile index outside range of available tiles: " + tileIndex;
+        }
+
         if(!dealerNames.isEmpty()) {
-            return dealerNames.get(tileNumber).getText();
+            return dealerNames.get(tileIndex).getText();
         } else {
             return "no result";
         }
     }
 
-    public String getSRPTileDistance(int tileNumber) {
+    public String getSRPTileDistance(int tileIndex) {
         ArrayList<WebElement> dealerDistances = new ArrayList<>(getDriver().findElements(srpTileDealerDistanceSelector));
 
+        if(tileIndex >= dealerDistances.size()) {
+            return "requested tile index outside range of available tiles: " + tileIndex;
+        }
+
         if(!dealerDistances.isEmpty()) {
-            return dealerDistances.get(tileNumber).getText();
+            return dealerDistances.get(tileIndex).getText();
         } else {
             return "no result";
         }
