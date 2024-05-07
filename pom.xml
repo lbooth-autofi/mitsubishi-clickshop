@@ -8,8 +8,8 @@
     <artifactId>mitsubishi-clickshop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>Java Selenium4 TestNG</name>
-    <url>https://github.com/leobooth/java-selenium4-testng</url>
+    <name>mitsubishi-clickshop</name>
+    <url>https://github.com/lbooth-autofi/mitsubishi-clickshop</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
