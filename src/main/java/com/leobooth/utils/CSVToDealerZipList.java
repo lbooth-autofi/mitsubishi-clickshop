@@ -8,6 +8,26 @@ import java.util.List;
 
 public class CSVToDealerZipList {
 
+    public enum CSVHeaders {
+        HAS_HEADERS, NO_HEADERS, KEEP_HEADERS, DISCARD_HEADERS
+    }
+
+    public static ArrayList<DealerZip> convertCSV(String csvFilePath, String delimiter,
+                                                  CSVHeaders headerInfo, CSVHeaders headerUsage) throws IOException {
+        boolean keepHeaders = false;
+
+        if (headerInfo == CSVHeaders.HAS_HEADERS) {
+            if (headerUsage == CSVHeaders.KEEP_HEADERS) {
+                keepHeaders = true;
+            }
+        } else {
+            keepHeaders = false;
+        }
+
+        return convertCSV(csvFilePath, delimiter, keepHeaders);
+
+    }
+
     public static ArrayList<DealerZip> convertCSV(String csvFilePath, String delimiter, boolean keepHeaders) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(csvFilePath));

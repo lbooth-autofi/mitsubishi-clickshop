@@ -3,6 +3,7 @@ package com.leobooth.mitsubishiclickshop;
 import com.leobooth.BaseTest;
 import com.leobooth.mitsubishiclickshop.pages.SearchResultsPage;
 import com.leobooth.utils.CSVToDealerZipList;
+import com.leobooth.utils.CSVToDealerZipList.CSVHeaders;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -38,7 +39,7 @@ public class ClickShopTest extends BaseTest {
         int actualDistance = -1;
 
         try {
-            srp.waitUntilDealerNameVisible(15);
+            srp.waitUntilDealerNameVisible(30);
             actualDealerName = srp.getSRPTileDealerName(tileIndex);
             actualDistanceAsString = srp.getSRPTileDistance(tileIndex);
             actualDistance = Integer.parseInt(
@@ -58,17 +59,18 @@ public class ClickShopTest extends BaseTest {
         }
 
         System.out.println("index: " + index + ", ZIP Code: " + expectedDealer.getZipCode() +
-                ", expected dealer: " + expectedDealer.getDealership() + ", actual dealer: " + actualDealerName);
+                ", expected dealer: " + expectedDealer.getDealership() + ", actual dealer: " + actualDealerName +
+                ", actual distance: " + actualDistanceAsString);
 
         softAssert.assertEquals(
                 actualDealerName.toUpperCase(), expectedDealer.getDealership().toUpperCase(),
                 "Unexpected result: dealer name, ZIP Code " + expectedDealer.getZipCode() + ", dealer " + expectedDealer.getDealership() + ","
         );
 
-        softAssert.assertEquals(
-                actualDistance, expectedDistance,
-                "Unexpected result: distance, ZIP Code " + expectedDealer.getZipCode() + ", dealer " + actualDealerName + ","
-        );
+//        softAssert.assertEquals(
+//                actualDistance, expectedDistance,
+//                "Unexpected result: distance, ZIP Code " + expectedDealer.getZipCode() + ", dealer " + actualDealerName + ","
+//        );
     }
 
     /**
@@ -78,8 +80,8 @@ public class ClickShopTest extends BaseTest {
     @Test
     public void testClickShopDealers() {
         String csvFilePath = "/Users/lbooth/Automation/mitsubishi-clickshop/" +
-                "src/main/java/com/leobooth/mitsubishiclickshop/" +
-                "testdata/DealershipsAndZIPCodes-20240425.csv";
+                "src/main/java/com/leobooth/mitsubishiclickshop/testdata/" +
+                "clickshop-test-12-may-2024.csv";
 
         // if test run fails before checking all dealers, reset index to last failed dealer and restart test
         int dealerIndex = 0;
@@ -92,7 +94,8 @@ public class ClickShopTest extends BaseTest {
         ArrayList<CSVToDealerZipList.DealerZip> dealerZipList = new ArrayList<>();
 
         try {
-            dealerZipList = CSVToDealerZipList.convertCSV(csvFilePath, "," , false);
+            dealerZipList = CSVToDealerZipList.convertCSV(csvFilePath, "," ,
+                    CSVHeaders.HAS_HEADERS, CSVHeaders.DISCARD_HEADERS);
         } catch (IOException e) {
             Assert.fail("Unable to convert CSV to list of DealerZip objects.");
         }

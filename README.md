@@ -31,8 +31,9 @@ To run ClickShopTest:
 1. Install Aqua
 1. Clone the mitsubishi-clickshop repository to your local machine
 1. Open this repo in Aqua
-1. Update the test data (if necessary)
+1. Update the test data (a CSV of dealers and the ZIP Code for which the dealer should appear)
 1. Open the ClickShopTest class
+1. Update the filepath to the test data (if necessary)
 1. Run the "testClickShopDealers()" test
 
 During the test run, the current CSV row (index), zip code, expected dealer, and actual dealer should appear in the Java Console, such as:
