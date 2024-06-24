@@ -15,7 +15,7 @@ ClickShopTest
 *  WHEN I visit a ClickShop URL containing a ZIP code
 *   AND I check the first tile of the Search Results Page
 *  THEN the vehicle tile should contain the name of the nearest dealer
-*   AND the dealer location should be 1 mile or less from the ZIP Code center
+* ~~AND the dealer location should be 1 mile or less from the ZIP Code center~~
 
 This test compares a list of Mitsubishi ClickShop dealer names and ZIP codes 
 to see if the expected dealer appears for each ZIP code, as outlined in this Jira ticket:

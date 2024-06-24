@@ -26,8 +26,8 @@ public class ClickShopTest extends BaseTest {
         searchResultsPage.waitUntilAllPageElementsVisible(15);
         String actualPageTitle = searchResultsPage.getPageTitle();
 
-        String expectedPageTitle = "Shop new Mitsubishi cars near you and pre-qualify | Mitsubishi powered by Drive";
-        Assert.assertEquals(actualPageTitle, expectedPageTitle, "ClickShop home page title is not visible.");
+        String expectedPageTitle = "Shop for Mitsubishi Cars for Sale & Find a Dealer Near You";
+        Assert.assertEquals(actualPageTitle, expectedPageTitle, "ClickShop search results page title does not match expected title.");
 
         return searchResultsPage;
     }
@@ -81,7 +81,7 @@ public class ClickShopTest extends BaseTest {
     public void testClickShopDealers() {
         String csvFilePath = "/Users/lbooth/Automation/mitsubishi-clickshop/" +
                 "src/main/java/com/leobooth/mitsubishiclickshop/testdata/" +
-                "clickshop-test-12-may-2024.csv";
+                "clickshop-test-2024-06-24.csv";
 
         // if test run fails before checking all dealers, reset index to last failed dealer and restart test
         int dealerIndex = 0;
